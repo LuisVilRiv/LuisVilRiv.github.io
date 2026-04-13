@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#07090f"/>
+  <rect width="32" height="32" rx="6" fill="none" stroke="#1b2035" stroke-width="1"/>
+  <text
+    x="4"
+    y="23"
+    font-family="'Syne', 'Arial Black', sans-serif"
+    font-weight="900"
+    font-size="18"
+    letter-spacing="-2"
+  ><tspan fill="#00d4ff">L</tspan><tspan fill="#ff4cf5">V</tspan></text>
+</svg>

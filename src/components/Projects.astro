@@ -16,7 +16,7 @@ const projects = (await getCollection('projects'))
       {projects.map((p) => (
         p.data.public && p.data.url ? (
           <a
-            class="project-card"
+            class="project-card fade-up"
             href={p.data.url}
             target="_blank"
             rel="noopener noreferrer"
@@ -31,7 +31,7 @@ const projects = (await getCollection('projects'))
             </div>
           </a>
         ) : (
-          <div class="project-card private">
+          <div class="project-card private fade-up">
             <div class="proj-head">
               <span class="proj-title">{p.data.title}</span>
               <span class="proj-badge">privado</span>
