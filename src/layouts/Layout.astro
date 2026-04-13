@@ -235,6 +235,32 @@ const { title = "Luis Villegas Rivera — Dev & Sistemas" } = Astro.props;
     background-clip: text;
   }
 
+  .logo-l {
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: #00d4ff;
+    letter-spacing: -0.08em;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .logo-v {
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: #ff4cf5;
+    letter-spacing: -0.08em;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .nav-logo:hover .logo-l {
+    color: #ff4cf5;
+    transform: skewX(-8deg);
+  }
+
+  .nav-logo:hover .logo-v {
+    color: #00d4ff;
+    transform: skewX(8deg);
+  }
+
   .nav-center {
     display: flex;
     gap: 2.5rem;
@@ -805,24 +831,42 @@ const { title = "Luis Villegas Rivera — Dev & Sistemas" } = Astro.props;
   }
 
   .skill-bar {
-    height: 6px;
-    background: linear-gradient(90deg, var(--border), var(--bord2));
-    border-radius: 3px;
+    height: 8px;
+    background: linear-gradient(90deg, rgba(0, 255, 202, 0.1), rgba(0, 255, 202, 0.05));
+    border-radius: 4px;
     overflow: hidden;
     position: relative;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 255, 202, 0.1);
   }
 
   .skill-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent), rgba(0, 255, 202, 0.7), var(--accent));
-    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent) 0%, rgba(0, 255, 202, 0.8) 50%, var(--accent) 100%);
+    border-radius: 4px;
     transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-    box-shadow: 0 0 16px rgba(0, 255, 202, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 255, 202, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.15), inset -1px 0 3px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+
+  .skill-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    border-radius: 4px;
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
   }
 
   .skill-item:hover .skill-fill {
-    box-shadow: 0 0 28px rgba(0, 255, 202, 0.8), 0 0 48px rgba(0, 255, 202, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 32px rgba(0, 255, 202, 0.9), 0 0 64px rgba(0, 255, 202, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
   }
 
   /* ==========================================
