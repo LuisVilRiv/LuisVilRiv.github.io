@@ -3,23 +3,46 @@
 const skills = [
   {
     label: "🌐 web",
-    tags: ["HTML", "CSS", "PHP", "Astro", "Markdown"],
+    items: [
+      { label: "HTML", level: 95 },
+      { label: "CSS", level: 92 },
+      { label: "Astro", level: 65 },
+      { label: "PHP", level: 80 },
+      { label: "Markdown", level: 90 },
+    ],
   },
   {
     label: "🧠 backend & datos",
-    tags: ["Python", "MySQL", "SQLite", "tkinter"],
+    items: [
+      { label: "Python", level: 85 },
+      { label: "MySQL", level: 82 },
+      { label: "SQLite", level: 72 },
+      { label: "tkinter", level: 55 },
+    ],
   },
   {
     label: "🖥️ sistemas & devops",
-    tags: [
-      "Linux", "Bash / Shell", "Docker", "Docker Compose",
-      "PowerShell", "Windows Server", "Microsoft 365",
-      "Intune", "Graph API", "VMware",
+    items: [
+      { label: "Linux", level: 90 },
+      { label: "PowerShell", level: 78 },
+      { label: "Docker", level: 85 },
+      { label: "Bash", level: 87 },
+      { label: "Windows Server", level: 72 },
+      { label: "Graph API", level: 55 },
+      { label: "Intune", level: 55 },
+      { label: "VMware", level: 70 },
+      { label: "Docker Compose", level: 85 },
+      { label: "Microsoft 365", level: 65 },
     ],
   },
   {
     label: "🛠️ herramientas",
-    tags: ["Git", "GitHub", "VS Code", "Power Automate"],
+    items: [
+      { label: "Git", level: 92 },
+      { label: "GitHub", level: 90 },
+      { label: "VS Code", level: 95 },
+      { label: "Power Automate", level: 55 },
+    ],
   },
 ];
 ---
@@ -28,14 +51,24 @@ const skills = [
   <div class="wrap">
     <span class="sec-label">// 03</span>
     <h2 class="sec-title">Habilidades</h2>
-    <p class="sec-sub">Sin baritas de porcentaje. Esto es lo que uso.</p>
+    <p class="sec-sub">Tecnologías con las que trabajo de verdad.</p>
 
     <div class="skills-grid">
       {skills.map((col) => (
         <div class="skill-block">
           <span class="skill-label">{col.label}</span>
-          <div class="skill-tags">
-            {col.tags.map((t) => <span class="tag">{t}</span>)}
+          <div class="skill-items">
+            {col.items.map((item) => (
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">{item.label}</span>
+                  <span class="skill-level">{item.level}%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill" style={`width: ${item.level}%`}></div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       ))}
