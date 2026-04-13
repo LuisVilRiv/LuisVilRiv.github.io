@@ -483,9 +483,10 @@ const { title = "Luis Villegas Rivera — Dev & Sistemas" } = Astro.props;
     color: var(--accent);
     position: relative;
     display: inline-block;
+    animation: glitchText 2.8s ease-in-out 1s infinite;
   }
 
-  /* Glitch effect on h1 accent — CSS only */
+  /* Glitch effect directly on text using text-shadow */
   .hero h1 .name-accent::before,
   .hero h1 .name-accent::after {
     content: attr(data-text);
@@ -494,18 +495,36 @@ const { title = "Luis Villegas Rivera — Dev & Sistemas" } = Astro.props;
     width: 100%;
     overflow: hidden;
     opacity: 0;
+    pointer-events: none;
   }
 
   .hero h1 .name-accent::before {
     color: #ff006e;
-    clip-path: polygon(0 0%, 100% 0%, 100% 32%, 0 32%);
     animation: glitch1 2.8s ease-in-out 1s infinite;
+    clip-path: polygon(0 0%, 100% 0%, 100% 32%, 0 32%);
+    z-index: -1;
   }
 
   .hero h1 .name-accent::after {
     color: #00f5ff;
-    clip-path: polygon(0 68%, 100% 68%, 100% 100%, 0 100%);
     animation: glitch2 2.8s ease-in-out 1.15s infinite;
+    clip-path: polygon(0 68%, 100% 68%, 100% 100%, 0 100%);
+    z-index: -1;
+  }
+
+  @keyframes glitchText {
+    0%, 8%, 20%, 100% { 
+      text-shadow: none;
+    }
+    2% { 
+      text-shadow: -8px -3px #ff006e, 6px 2px #00f5ff;
+    }
+    4% { 
+      text-shadow: 6px 2px #ff006e, -8px -3px #00f5ff;
+    }
+    6% { 
+      text-shadow: -4px 4px #ff006e, 4px -4px #00f5ff;
+    }
   }
 
   @keyframes glitch1 {
