@@ -28,32 +28,31 @@
         </div>
       </div>
 
-      <!--
-        Formulario con Formspree — funciona sin backend.
-        Pasos para activarlo:
-          1. Regístrate gratis en https://formspree.io
-          2. Crea un nuevo form con tu email
-          3. Sustituye "TU_FORM_ID" por el ID que te dan (p.ej. xpzgwkqr)
-      -->
       <form
         class="contact-form"
-        action="https://formspree.io/f/TU_FORM_ID"
+        action="https://formspree.io/f/xlgaejzd"
         method="POST"
       >
+        <!-- Configuración -->
+        <input type="hidden" name="_next" value="/gracias" />
+        <input type="hidden" name="_subject" value="Nuevo mensaje desde portfolio" />
+        <input type="text" name="_gotcha" style="display:none" />
+
         <div class="field">
           <label for="nombre">Nombre</label>
           <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required />
         </div>
+
         <div class="field">
           <label for="email">Email</label>
           <input id="email" name="email" type="email" placeholder="tu@email.com" required />
         </div>
+
         <div class="field">
           <label for="mensaje">Mensaje</label>
           <textarea id="mensaje" name="mensaje" rows="5" placeholder="De qué va..." required></textarea>
         </div>
-        <!-- Honeypot anti-spam de Formspree -->
-        <input type="text" name="_gotcha" style="display:none" />
+
         <button type="submit" class="btn btn-full">Enviar mensaje</button>
       </form>
     </div>
