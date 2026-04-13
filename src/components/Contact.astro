@@ -1,0 +1,53 @@
+---
+// Contact.astro
+---
+
+<section id="contacto" class="section section-dark">
+  <div class="wrap">
+    <span class="sec-label">// 04</span>
+    <h2 class="sec-title">Contacto</h2>
+    <p class="sec-sub">Si tienes una oportunidad de FCT o simplemente quieres hablar de un proyecto.</p>
+
+    <div class="contact-grid">
+      <div class="contact-links">
+        <a href="mailto:villegasriveraluis@gmail.com" class="contact-link">
+          <span class="cl-label">email</span>
+          <span class="cl-val">villegasriveraluis@gmail.com</span>
+        </a>
+        <a href="https://github.com/LuisVilRiv" target="_blank" rel="noopener noreferrer" class="contact-link">
+          <span class="cl-label">github</span>
+          <span class="cl-val">LuisVilRiv</span>
+        </a>
+        <a href="https://www.linkedin.com/in/luis-villegas-rivera/" target="_blank" rel="noopener noreferrer" class="contact-link">
+          <span class="cl-label">linkedin</span>
+          <span class="cl-val">luis-villegas-rivera</span>
+        </a>
+        <div class="contact-link" style="cursor:default">
+          <span class="cl-label">ubicación</span>
+          <span class="cl-val">Granada, España</span>
+        </div>
+      </div>
+
+      <form
+        class="contact-form"
+        action="mailto:villegasriveraluis@gmail.com"
+        method="POST"
+        enctype="text/plain"
+      >
+        <div class="field">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="Nombre" type="text" placeholder="Tu nombre" required />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="Email" type="email" placeholder="tu@email.com" required />
+        </div>
+        <div class="field">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="Mensaje" rows="5" placeholder="De qué va..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-full">Enviar mensaje</button>
+      </form>
+    </div>
+  </div>
+</section>

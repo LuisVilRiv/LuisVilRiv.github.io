@@ -1,0 +1,54 @@
+---
+// Projects.astro — reads from src/content/projects/*.md
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+---
+
+<section id="proyectos" class="section section-dark">
+  <div class="wrap">
+    <span class="sec-label">// 02</span>
+    <h2 class="sec-title">Proyectos</h2>
+    <p class="sec-sub">Lo que hay en mi GitHub. Código real, nada de demos vacías.</p>
+
+    <div class="projects-grid">
+      {projects.map((p) => (
+        p.data.public && p.data.url ? (
+          <a
+            class="project-card"
+            href={p.data.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="proj-head">
+              <span class="proj-title">{p.data.title}</span>
+              <span class="proj-arrow" aria-hidden="true">↗</span>
+            </div>
+            <p class="proj-desc">{p.data.desc}</p>
+            <div class="proj-tags">
+              {p.data.tags.map((t: string) => <span class="tag">{t}</span>)}
+            </div>
+          </a>
+        ) : (
+          <div class="project-card private">
+            <div class="proj-head">
+              <span class="proj-title">{p.data.title}</span>
+              <span class="proj-badge">privado</span>
+            </div>
+            <p class="proj-desc">{p.data.desc}</p>
+            <div class="proj-tags">
+              {p.data.tags.map((t: string) => <span class="tag">{t}</span>)}
+            </div>
+          </div>
+        )
+      ))}
+    </div>
+
+    <p class="projects-footer">
+      <a href="https://github.com/LuisVilRiv" target="_blank" rel="noopener noreferrer">
+        Ver perfil completo en GitHub →
+      </a>
+    </p>
+  </div>
+</section>

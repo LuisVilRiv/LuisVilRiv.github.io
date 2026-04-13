@@ -1,0 +1,897 @@
+---
+interface Props {
+  title?: string;
+}
+const { title = "Luis Villegas Rivera — Dev & Sistemas" } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content="Portfolio de Luis Villegas Rivera — DAW + ASIR. Desarrollo web, sistemas y automatización." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="grid-overlay" aria-hidden="true"></div>
+  <slot />
+</body>
+</html>
+
+<style is:global>
+  /* ==========================================
+     VARIABLES & RESET
+  ========================================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #07090f;
+    --bg2:     #0a0d18;
+    --surface: #0e1220;
+    --surf2:   #131929;
+    --border:  #1b2035;
+    --bord2:   #252e4a;
+    --text:    #dde4f5;
+    --muted:   #4a567a;
+    --muted2:  #6272a0;
+    --accent:  #00ffca;
+    --acc2:    rgba(0,255,202,0.08);
+    --acc3:    rgba(0,255,202,0.16);
+    --r:       6px;
+    --rl:      14px;
+    --mono:    'JetBrains Mono', monospace;
+    --sans:    'Syne', sans-serif;
+    --max:     1100px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.93rem;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  ul { list-style: none; }
+  img { display: block; }
+
+  /* ==========================================
+     GRID OVERLAY
+  ========================================== */
+  .grid-overlay {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,202,0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,202,0.022) 1px, transparent 1px);
+    background-size: 72px 72px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ==========================================
+     UTILS
+  ========================================== */
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .accent  { color: var(--accent); }
+  .muted   { color: var(--muted); }
+  .mono    { font-family: var(--mono); }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted2);
+  }
+
+  /* ==========================================
+     SECTION COMMON
+  ========================================== */
+  .section {
+    padding: 7rem 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-dark {
+    background: linear-gradient(180deg, transparent, var(--bg2) 5%, var(--bg2) 95%, transparent);
+  }
+
+  .sec-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+
+  .sec-title {
+    font-family: var(--sans);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin-bottom: 0.9rem;
+  }
+
+  .sec-sub {
+    color: var(--muted2);
+    font-size: 0.9rem;
+    margin-bottom: 3.5rem;
+    max-width: 54ch;
+  }
+
+  /* ==========================================
+     FADE-IN ANIMATIONS (CSS only)
+  ========================================== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .fade-up {
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+    animation-play-state: paused;
+  }
+
+  .fade-up.in-view {
+    animation-play-state: running;
+  }
+
+  .fade-up:nth-child(1) { animation-delay: 0.05s; }
+  .fade-up:nth-child(2) { animation-delay: 0.15s; }
+  .fade-up:nth-child(3) { animation-delay: 0.25s; }
+  .fade-up:nth-child(4) { animation-delay: 0.35s; }
+  .fade-up:nth-child(5) { animation-delay: 0.45s; }
+  .fade-up:nth-child(6) { animation-delay: 0.55s; }
+
+  /* ==========================================
+     NAV
+  ========================================== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 2rem;
+    transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+    border-bottom: 1px solid transparent;
+  }
+
+  /* Nav scrolled state is toggled via inline JS-free trick:
+     we use a <details>-free approach — just CSS :has on scroll position.
+     For simplicity the navbar uses a tiny Astro island if needed;
+     here we use a CSS scroll-driven workaround. */
+  @supports (animation-timeline: scroll()) {
+    .nav {
+      animation: navScroll linear both;
+      animation-timeline: scroll();
+      animation-range: 0px 80px;
+    }
+    @keyframes navScroll {
+      from {
+        background: transparent;
+        border-color: transparent;
+        backdrop-filter: none;
+      }
+      to {
+        background: rgba(7,9,15,0.92);
+        border-color: var(--border);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+    }
+  }
+
+  .nav-logo {
+    font-family: var(--sans);
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .nav-logo .dot { color: var(--accent); }
+
+  .nav-center {
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  .nav-center a {
+    font-size: 0.7rem;
+    color: var(--muted2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+    padding-bottom: 2px;
+  }
+
+  .nav-center a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  .nav-center a:hover { color: var(--accent); }
+  .nav-center a:hover::after { transform: scaleX(1); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .nav-icon {
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+  }
+  .nav-icon:hover { color: var(--accent); }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.25s, opacity 0.25s;
+  }
+
+  /* Pure-CSS mobile menu toggle using hidden checkbox */
+  #menu-toggle { display: none; }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 58px; left: 0; right: 0;
+    background: rgba(7,9,15,0.97);
+    border-bottom: 1px solid var(--border);
+    z-index: 99;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1.4rem;
+    backdrop-filter: blur(18px);
+    transform: translateY(-10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  #menu-toggle:checked ~ .mobile-menu {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #menu-toggle:checked ~ .nav .hamburger span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  #menu-toggle:checked ~ .nav .hamburger span:nth-child(2) { opacity: 0; }
+  #menu-toggle:checked ~ .nav .hamburger span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .mobile-menu a {
+    font-family: var(--sans);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  /* ==========================================
+     BUTTONS
+  ========================================== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent);
+    color: #07090f;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.7rem;
+    border-radius: var(--r);
+    border: none;
+    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -120%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.45s ease;
+    pointer-events: none;
+  }
+
+  .btn:hover { opacity: 0.88; transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,255,202,0.2); }
+  .btn:hover::after { left: 180%; }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.7rem;
+    border-radius: var(--r);
+    border: 1px solid var(--bord2);
+    color: var(--muted2);
+    background: transparent;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* ==========================================
+     HERO
+  ========================================== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    padding: 8rem 2rem 5rem;
+    max-width: var(--max);
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-text { flex: 1; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted2);
+    border: 1px solid var(--border);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    background: var(--surface);
+    animation: fadeIn 0.8s ease 0.1s both;
+  }
+
+  .hero-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    flex-shrink: 0;
+    animation: blink 2.2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-family: var(--sans);
+    font-size: clamp(3.8rem, 9vw, 7rem);
+    font-weight: 800;
+    line-height: 0.93;
+    letter-spacing: -0.05em;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero h1 .name-accent {
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Glitch effect on h1 accent — CSS only */
+  .hero h1 .name-accent::before,
+  .hero h1 .name-accent::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .hero h1 .name-accent::before {
+    color: #ff4cf5;
+    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+    animation: glitch1 6s ease-in-out 2s infinite;
+  }
+
+  .hero h1 .name-accent::after {
+    color: #00d4ff;
+    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    animation: glitch2 6s ease-in-out 2.1s infinite;
+  }
+
+  @keyframes glitch1 {
+    0%,89%,100% { opacity: 0; transform: none; }
+    90% { opacity: 0.7; transform: translateX(-3px) skewX(-2deg); }
+    92% { opacity: 0; }
+    94% { opacity: 0.5; transform: translateX(3px); }
+    96% { opacity: 0; }
+  }
+
+  @keyframes glitch2 {
+    0%,89%,100% { opacity: 0; transform: none; }
+    90% { opacity: 0.6; transform: translateX(3px) skewX(2deg); }
+    92% { opacity: 0; }
+    94% { opacity: 0.4; transform: translateX(-2px); }
+    96% { opacity: 0; }
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--muted2);
+    line-height: 1.75;
+    margin-bottom: 2.8rem;
+    max-width: 48ch;
+    animation: fadeUp 0.8s ease 0.35s both;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+
+  /* Photo */
+  .hero-photo {
+    flex-shrink: 0;
+    position: relative;
+    animation: fadeIn 1s ease 0.6s both;
+  }
+
+  .photo-frame {
+    width: 280px; height: 330px;
+    border-radius: var(--rl);
+    overflow: hidden;
+    border: 1px solid var(--bord2);
+    background: var(--surface);
+    position: relative;
+  }
+
+  .photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, transparent 50%, rgba(0,255,202,0.07));
+    pointer-events: none;
+  }
+
+  .photo-frame img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .photo-badge {
+    position: absolute;
+    bottom: -18px; right: -18px;
+    background: var(--surface);
+    border: 1px solid var(--bord2);
+    border-radius: var(--r);
+    padding: 0.85rem 1.2rem;
+    text-align: center;
+  }
+
+  .photo-badge .label {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.1rem;
+  }
+
+  .photo-badge .value {
+    font-family: var(--sans);
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  /* Decorative corner lines */
+  .photo-corner {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--accent);
+    border-style: solid;
+    opacity: 0.5;
+  }
+  .photo-corner.tl { top: -6px; left: -6px; border-width: 2px 0 0 2px; }
+  .photo-corner.tr { top: -6px; right: -6px; border-width: 2px 2px 0 0; }
+  .photo-corner.bl { bottom: 10px; left: -6px; border-width: 0 0 2px 2px; }
+
+  /* ==========================================
+     SOBRE MÍ
+  ========================================== */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 4.5rem;
+    align-items: start;
+  }
+
+  .about-body p {
+    color: var(--muted2);
+    margin-bottom: 1.1rem;
+    font-size: 0.92rem;
+  }
+
+  .about-body p strong { color: var(--text); font-weight: 600; }
+
+  .about-aside { display: flex; flex-direction: column; gap: 2rem; }
+
+  .aside-block {}
+
+  .aside-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .aside-block p {
+    font-size: 0.88rem;
+    color: var(--muted2);
+    margin-bottom: 0.25rem;
+  }
+
+  .aside-block p strong { color: var(--text); font-weight: 600; }
+
+  /* ==========================================
+     PROYECTOS
+  ========================================== */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--rl);
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Sweep glow on hover — CSS only */
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  a.project-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(0,255,202,0.06);
+  }
+
+  a.project-card:hover::before { transform: scaleX(1); }
+
+  .project-card.private {
+    opacity: 0.55;
+  }
+
+  .proj-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .proj-title {
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  .proj-arrow { color: var(--accent); font-size: 1.1rem; flex-shrink: 0; }
+
+  .proj-badge {
+    font-size: 0.62rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    border: 1px solid var(--bord2);
+    color: var(--muted);
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .proj-desc {
+    font-size: 0.83rem;
+    color: var(--muted2);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .proj-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: auto;
+  }
+
+  .proj-tags .tag {
+    background: var(--bg);
+    border-color: var(--border);
+  }
+
+  .projects-footer {
+    font-size: 0.82rem;
+    color: var(--muted2);
+  }
+
+  .projects-footer a {
+    color: var(--accent);
+    transition: opacity 0.2s;
+  }
+  .projects-footer a:hover { opacity: 0.7; }
+
+  /* ==========================================
+     HABILIDADES
+  ========================================== */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .skill-block {
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--rl);
+    transition: border-color 0.2s;
+  }
+
+  .skill-block:hover { border-color: var(--bord2); }
+
+  .skill-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .skill-tags .tag {
+    background: var(--bg);
+    border-color: var(--bord2);
+    color: var(--text);
+    font-size: 0.75rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .skill-tags .tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ==========================================
+     CONTACTO
+  ========================================== */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .contact-links { display: flex; flex-direction: column; }
+
+  .contact-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: padding-left 0.2s, color 0.2s;
+  }
+
+  .contact-link:first-child { border-top: 1px solid var(--border); }
+
+  .contact-link .cl-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+  }
+
+  .contact-link .cl-val {
+    font-size: 0.88rem;
+    color: var(--text);
+    word-break: break-all;
+    transition: color 0.2s;
+  }
+
+  a.contact-link:hover { padding-left: 0.5rem; }
+  a.contact-link:hover .cl-val { color: var(--accent); }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .field { display: flex; flex-direction: column; gap: 0.45rem; }
+
+  .field label {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .field input,
+  .field textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 0.8rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--text);
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder { color: var(--muted); }
+
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,255,202,0.08);
+  }
+
+  .btn-full { width: 100%; justify-content: center; }
+
+  /* ==========================================
+     FOOTER
+  ========================================== */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-inner span { font-size: 0.75rem; color: var(--muted); }
+  .footer-inner .accent { color: var(--accent); }
+
+  /* ==========================================
+     RESPONSIVE
+  ========================================== */
+  @media (max-width: 900px) {
+    .nav-center { display: none; }
+    .hamburger { display: flex; }
+    .mobile-menu { display: flex; }
+
+    .hero {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 3rem;
+      padding-top: 6.5rem;
+    }
+
+    .hero-photo { align-self: center; }
+    .photo-frame { width: 210px; height: 240px; }
+
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .projects-grid { grid-template-columns: repeat(2, 1fr); }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  }
+
+  @media (max-width: 580px) {
+    .wrap { padding: 0 1.25rem; }
+    .section { padding: 4.5rem 0; }
+    .nav { padding: 1rem 1.25rem; }
+    .hero { padding: 6.5rem 1.25rem 3rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .hero-btns { flex-direction: column; }
+    .hero-btns a { text-align: center; justify-content: center; }
+    .photo-badge { bottom: -12px; right: -12px; }
+  }
+</style>

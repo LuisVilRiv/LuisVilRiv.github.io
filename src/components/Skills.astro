@@ -1,0 +1,44 @@
+---
+// Skills.astro
+const skills = [
+  {
+    label: "🌐 web",
+    tags: ["HTML", "CSS", "PHP", "Astro", "Markdown"],
+  },
+  {
+    label: "🧠 backend & datos",
+    tags: ["Python", "MySQL", "SQLite", "tkinter"],
+  },
+  {
+    label: "🖥️ sistemas & devops",
+    tags: [
+      "Linux", "Bash / Shell", "Docker", "Docker Compose",
+      "PowerShell", "Windows Server", "Microsoft 365",
+      "Intune", "Graph API", "VMware",
+    ],
+  },
+  {
+    label: "🛠️ herramientas",
+    tags: ["Git", "GitHub", "VS Code", "Power Automate"],
+  },
+];
+---
+
+<section id="habilidades" class="section">
+  <div class="wrap">
+    <span class="sec-label">// 03</span>
+    <h2 class="sec-title">Habilidades</h2>
+    <p class="sec-sub">Sin baritas de porcentaje. Esto es lo que uso.</p>
+
+    <div class="skills-grid">
+      {skills.map((col) => (
+        <div class="skill-block">
+          <span class="skill-label">{col.label}</span>
+          <div class="skill-tags">
+            {col.tags.map((t) => <span class="tag">{t}</span>)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
