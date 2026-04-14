@@ -15,8 +15,16 @@ import Layout from "../layouts/Layout.astro";
       </p>
 
       <div class="gracias-actions fade-in delay-2">
-        <a href="#contacto" class="btn">Volver</a>
-        <span class="auto-redirect">Redirigiendo en <strong id="count">3</strong>s</span>
+        
+        <!-- ✔ VUELTA REAL AL INDEX -->
+        <a href="/" class="btn">
+          Volver al inicio
+        </a>
+
+        <span class="auto-redirect">
+          Redirigiendo en <strong id="count">3</strong>s
+        </span>
+
       </div>
 
     </div>
@@ -28,11 +36,14 @@ import Layout from "../layouts/Layout.astro";
 
     const interval = setInterval(() => {
       seconds--;
+
       if (counter) counter.textContent = seconds;
 
       if (seconds <= 0) {
         clearInterval(interval);
-        window.location.href = "#contacto";
+
+        // ✔ REDIRECCIÓN CORRECTA
+        window.location.href = "/";
       }
     }, 1000);
   </script>
