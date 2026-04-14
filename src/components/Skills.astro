@@ -1,4 +1,6 @@
 ---
+// Skills.astro
+
 const tierOrder = {
   high: 0,
   mid: 1,
@@ -40,100 +42,66 @@ const skills = [
       { label: "Microsoft 365", tier: "base" },
     ].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]),
   },
+  {
+    label: "herramientas & ia",
+    items: [
+      { label: "Git", tier: "high" },
+      { label: "GitHub", tier: "high" },
+      { label: "VS Code", tier: "high" },
+      { label: "Copilot", tier: "mid" },
+      { label: "Claude Code", tier: "mid" },
+      { label: "Power Automate", tier: "base" },
+      { label: "Prompting", tier: "mid" },
+    ].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]),
+  },
 ];
 ---
 
 <section class="terminal" id="skills">
   <div class="wrap">
 
-    <!-- HEADER TYPING -->
-    <pre class="terminal-header">
-<span id="boot"></span><span class="cursor">█</span>
+    <!-- HEADER SUTIL -->
+    <pre class="header">
+<span id="typing"></span><span class="cursor">▌</span>
     </pre>
 
-    <h2 class="title">$ skills --scan</h2>
+    <h2 class="title">$ skills</h2>
 
-    <div class="terminal-box" id="scanBox">
+    <div class="box">
 
-      {skills.map((col, colIndex) => (
-        <div class="block hidden" data-block={colIndex}>
-          <div class="block-header">
-            [{col.label.toUpperCase()}]
-          </div>
+      {skills.map((col, i) => (
+        <div class="block" style={`animation-delay:${i * 80}ms`}>
+          <div class="block-title">[{col.label}]</div>
 
-          <div class="block-content">
-            {col.items.map((item) => (
-              <div class={`line ${item.tier} hidden-line`}>
-                <span class="prompt">&gt;</span>
+          <div class="items">
+            {col.items.map((item, j) => (
+              <div class="line" style={`animation-delay:${j * 25}ms`}>
+                <span class={`dot dot-${item.tier}`}></span>
                 <span class="name">{item.label}</span>
                 <span class="tier">[{item.tier}]</span>
               </div>
             ))}
           </div>
+
         </div>
       ))}
 
     </div>
-
-    <pre class="footer" id="footer"></pre>
-
   </div>
 </section>
 
 <script is:inline>
-const bootText = [
-  "initializing skills module...",
-  "loading dependencies...",
-  "scanning repositories...",
-  "mapping competencies...",
-  "status: READY"
-];
-
-const bootEl = document.getElementById("boot");
-const footerEl = document.getElementById("footer");
+const text = "loading skills module...";
+const el = document.getElementById("typing");
 
 let i = 0;
-let char = 0;
 
 function type() {
-  if (i >= bootText.length) {
-    setTimeout(startScan, 500);
-    return;
-  }
-
-  const line = bootText[i];
-
-  if (char < line.length) {
-    bootEl.innerHTML += line[char];
-    char++;
-    setTimeout(type, 18);
-  } else {
-    bootEl.innerHTML += "\n";
+  if (i < text.length) {
+    el.textContent += text[i];
     i++;
-    char = 0;
-    setTimeout(type, 180);
+    setTimeout(type, 22);
   }
-}
-
-function startScan() {
-  footerEl.textContent = "scan complete — rendering modules...";
-
-  const blocks = document.querySelectorAll(".block");
-
-  blocks.forEach((block, i) => {
-    setTimeout(() => {
-      block.classList.remove("hidden");
-
-      const lines = block.querySelectorAll(".hidden-line");
-
-      lines.forEach((line, j) => {
-        setTimeout(() => {
-          line.classList.add("show");
-        }, j * 40);
-      });
-
-    }, i * 600);
-  });
 }
 
 type();
@@ -145,10 +113,16 @@ type();
   color: #c8fff3;
 }
 
-/* typing cursor */
+/* header */
+.header {
+  font-size: 0.78rem;
+  color: var(--muted);
+  min-height: 22px;
+  margin-bottom: 0.5rem;
+}
+
 .cursor {
-  display: inline-block;
-  animation: blink 0.8s infinite;
+  animation: blink 1s infinite;
   color: var(--accent);
 }
 
@@ -156,80 +130,82 @@ type();
   50% { opacity: 0; }
 }
 
-.terminal-header {
-  font-size: 0.78rem;
-  color: var(--muted);
-  min-height: 60px;
-  white-space: pre-line;
-}
-
 .title {
-  color: var(--accent);
   font-size: 1rem;
   margin: 1rem 0;
+  color: var(--accent);
+  letter-spacing: 0.05em;
 }
 
-.terminal-box {
-  border: 1px solid rgba(0,255,202,0.25);
-  background: rgba(0,0,0,0.25);
-  padding: 1.5rem;
+/* container */
+.box {
+  border: 1px solid rgba(0,255,202,0.18);
+  background: rgba(0,0,0,0.22);
   border-radius: var(--rl);
-  backdrop-filter: blur(8px);
-  overflow: hidden;
+  padding: 1.3rem;
 }
 
 /* blocks */
 .block {
   margin-bottom: 1.2rem;
-  opacity: 1;
-  transition: all 0.3s ease;
-}
-
-.block.hidden {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(6px);
+  animation: fadeIn 0.35s ease forwards;
 }
 
-.block-header {
-  color: var(--accent);
-  font-size: 0.75rem;
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.block-title {
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
-  margin-bottom: 0.5rem;
+  color: var(--accent);
+  margin-bottom: 0.55rem;
 }
 
-/* lines */
+/* items */
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
 .line {
   display: flex;
+  align-items: center;
   gap: 0.6rem;
   font-size: 0.78rem;
-  align-items: center;
 
   opacity: 0;
-  transform: translateX(-6px);
-  transition: all 0.25s ease;
+  animation: fadeIn 0.25s ease forwards;
 }
 
-.line.show {
-  opacity: 1;
-  transform: translateX(0);
+.name {
+  flex: 1;
 }
 
-.prompt { color: var(--accent); }
-.name { flex: 1; }
-.tier { font-size: 0.65rem; opacity: 0.6; }
-
-/* tier colors */
-.high .name { color: #d7fff7; }
-.mid .name { color: #a9d6cf; }
-.base .name { color: rgba(255,255,255,0.55); }
-
-.high .tier { color: var(--accent); }
-.mid .tier { color: rgba(0,255,202,0.5); }
-.base .tier { color: rgba(255,255,255,0.3); }
-
-.footer {
-  margin-top: 1.2rem;
-  color: rgba(0,255,202,0.6);
-  font-size: 0.75rem;
+/* dot */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
 }
+
+.dot-high { background: var(--accent); }
+.dot-mid { background: rgba(0,255,202,0.5); }
+.dot-base { background: rgba(255,255,255,0.25); }
+
+/* tier text subtle */
+.tier {
+  font-size: 0.65rem;
+  opacity: 0.45;
+}
+
+.high .name { color: #e6fffb; }
+.mid .name { color: #b8d4d0; }
+.base .name { color: rgba(255,255,255,0.6); }
 </style>
