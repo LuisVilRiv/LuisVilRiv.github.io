@@ -43,11 +43,7 @@
       </div>
 
       <!-- FORM -->
-      <form
-        class="contact-form"
-        action="https://formspree.io/f/xlgaejzd"
-        method="POST"
-      >
+      <form class="contact-form" id="contactForm">
 
         <div class="field">
           <label>Nombre</label>
@@ -88,9 +84,11 @@
           </span>
         </div>
 
-        <button type="submit" class="btn btn-full">
+        <button id="submitBtn" type="submit" class="btn btn-full">
           Enviar mensaje
         </button>
+
+        <p id="status" class="form-status"></p>
 
       </form>
 
@@ -99,6 +97,10 @@
 </section>
 
 <script>
+  const form = document.getElementById("contactForm");
+  const btn = document.getElementById("submitBtn");
+  const status = document.getElementById("status");
+
   const input = document.getElementById("linkInput");
   const preview = document.getElementById("linkPreview");
   const icon = document.getElementById("linkIcon");
@@ -163,73 +165,33 @@
     wrapper.classList.remove("valid", "invalid");
     icon.textContent = "🔗";
   });
+
+  // SUBMIT CON TU REDIRECCIÓN
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("https://formspree.io/f/xlgaejzd", {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" }
+      });
+
+      if (res.ok) {
+        window.location.href = "/gracias"; // 👈 TU REDIRECCIÓN
+      } else {
+        status.textContent = "Error al enviar";
+      }
+    } catch {
+      status.textContent = "Error de conexión";
+    }
+
+    btn.disabled = false;
+    btn.textContent = "Enviar mensaje";
+  });
 </script>
-
-<style>
-.link-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 10px;
-  padding: 8px 10px;
-  background: rgba(255,255,255,0.02);
-  transition: 0.2s;
-}
-
-.link-input-wrapper.valid {
-  border-color: rgba(74,222,128,0.6);
-}
-
-.link-input-wrapper.invalid {
-  border-color: rgba(248,113,113,0.7);
-}
-
-.link-icon {
-  opacity: 0.7;
-}
-
-.clear-link {
-  margin-left: auto;
-  border: none;
-  background: transparent;
-  color: rgba(255,255,255,0.4);
-  cursor: pointer;
-}
-
-.clear-link:hover {
-  color: white;
-}
-
-.link-preview {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.03);
-  align-items: center;
-}
-
-.lp-icon {
-  font-size: 18px;
-}
-
-.lp-meta strong {
-  display: block;
-  font-size: 13px;
-}
-
-.lp-meta a {
-  font-size: 11px;
-  opacity: 0.6;
-  word-break: break-all;
-}
-
-.field-hint {
-  display: block;
-  margin-top: 6px;
-  font-size: 11px;
-  opacity: 0.5;
-}
-</style>
