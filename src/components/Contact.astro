@@ -32,7 +32,7 @@
       </div>
 
       <!-- FORM -->
-      <form class="contact-form" id="contactForm">
+      <form class="contact-form" id="contactForm" enctype="multipart/form-data">
         <div class="field">
           <label for="nombre">Nombre</label>
           <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required />
@@ -46,6 +46,11 @@
         <div class="field">
           <label for="mensaje">Mensaje</label>
           <textarea id="mensaje" name="mensaje" rows="5" placeholder="De qué va..." required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="archivo">Archivo (opcional)</label>
+          <input id="archivo" name="archivo" type="file" />
         </div>
 
         <button type="submit" class="btn btn-full" id="submitBtn">
