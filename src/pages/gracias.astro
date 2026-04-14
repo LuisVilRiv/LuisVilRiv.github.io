@@ -4,14 +4,77 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Mensaje enviado">
   <section class="section section-dark">
-    <div class="wrap" style="text-align:center">
+    <div class="wrap gracias-wrap">
+
       <span class="sec-label">// OK</span>
-      <h2 class="sec-title">Mensaje enviado</h2>
-      <p class="sec-sub">
+
+      <h2 class="sec-title fade-in">Mensaje enviado</h2>
+
+      <p class="sec-sub fade-in delay">
         Gracias por contactar. Te responderé lo antes posible.
       </p>
 
-      <a href="/#contacto" class="btn">Volver</a>
+      <div class="gracias-actions fade-in delay-2">
+        <a href="#contacto" class="btn">Volver</a>
+        <span class="auto-redirect">Redirigiendo en <strong id="count">3</strong>s</span>
+      </div>
+
     </div>
   </section>
+
+  <script>
+    let seconds = 3;
+    const counter = document.getElementById("count");
+
+    const interval = setInterval(() => {
+      seconds--;
+      if (counter) counter.textContent = seconds;
+
+      if (seconds <= 0) {
+        clearInterval(interval);
+        window.location.href = "#contacto";
+      }
+    }, 1000);
+  </script>
 </Layout>
+
+<style>
+.gracias-wrap {
+  text-align: center;
+}
+
+/* Animaciones suaves */
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.delay {
+  animation-delay: 0.2s;
+}
+
+.delay-2 {
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gracias-actions {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.auto-redirect {
+  font-size: 12px;
+  opacity: 0.5;
+}
+</style>

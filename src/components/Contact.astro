@@ -60,7 +60,7 @@
           <textarea name="mensaje" rows="5" required></textarea>
         </div>
 
-        <!-- LINK SMART -->
+        <!-- LINK INTELIGENTE -->
         <div class="field">
           <label>Archivo o proyecto (opcional)</label>
 
@@ -166,7 +166,7 @@
     icon.textContent = "🔗";
   });
 
-  // SUBMIT CON TU REDIRECCIÓN
+  // SUBMIT + REDIRECT A TU /gracias
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -183,15 +183,86 @@
       });
 
       if (res.ok) {
-        window.location.href = "/gracias"; // 👈 TU REDIRECCIÓN
+        window.location.href = "gracias"; // 🔥 CLAVE
       } else {
         status.textContent = "Error al enviar";
+        status.style.color = "#f87171";
       }
     } catch {
       status.textContent = "Error de conexión";
+      status.style.color = "#f87171";
     }
 
     btn.disabled = false;
     btn.textContent = "Enviar mensaje";
   });
 </script>
+
+<style>
+.link-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.02);
+  transition: 0.2s;
+}
+
+.link-input-wrapper.valid {
+  border-color: rgba(74,222,128,0.6);
+}
+
+.link-input-wrapper.invalid {
+  border-color: rgba(248,113,113,0.7);
+}
+
+.link-icon {
+  opacity: 0.7;
+}
+
+.clear-link {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+}
+
+.clear-link:hover {
+  color: white;
+}
+
+.link-preview {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  align-items: center;
+}
+
+.lp-icon {
+  font-size: 18px;
+}
+
+.lp-meta strong {
+  display: block;
+  font-size: 13px;
+}
+
+.lp-meta a {
+  font-size: 11px;
+  opacity: 0.6;
+  word-break: break-all;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.5;
+}
+</style>
