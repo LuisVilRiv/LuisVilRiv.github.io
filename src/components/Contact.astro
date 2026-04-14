@@ -6,7 +6,9 @@
   <div class="wrap">
     <span class="sec-label">// 04</span>
     <h2 class="sec-title">Contacto</h2>
-    <p class="sec-sub">Si tienes una oportunidad de FCT o simplemente quieres hablar de un proyecto.</p>
+    <p class="sec-sub">
+      Si tienes una oportunidad de FCT o simplemente quieres hablar de un proyecto.
+    </p>
 
     <div class="contact-grid">
 
@@ -18,12 +20,7 @@
           <span class="cl-val">villegasriveraluis@gmail.com</span>
         </a>
 
-        <a
-          href="https://wa.me/34635138578"
-          target="_blank"
-          class="contact-link"
-          rel="noopener noreferrer"
-        >
+        <a href="https://wa.me/34635138578" target="_blank" class="contact-link">
           <span class="cl-label">whatsapp</span>
           <span class="cl-val">+34 635 13 85 78</span>
         </a>
@@ -46,7 +43,11 @@
       </div>
 
       <!-- FORM -->
-      <form class="contact-form" id="contactForm" enctype="multipart/form-data">
+      <form
+        class="contact-form"
+        action="https://formspree.io/f/xlgaejzd"
+        method="POST"
+      >
 
         <div class="field">
           <label>Nombre</label>
@@ -63,30 +64,34 @@
           <textarea name="mensaje" rows="5" required></textarea>
         </div>
 
-        <!-- DROPZONE -->
+        <!-- LINK SMART -->
         <div class="field">
-          <label>Archivo (opcional)</label>
+          <label>Archivo o proyecto (opcional)</label>
 
-          <div id="dropzone" class="dropzone">
-            <input id="fileInput" name="archivo" type="file" hidden />
+          <div class="link-input-wrapper" id="linkWrapper">
+            <span id="linkIcon" class="link-icon">🔗</span>
 
-            <div class="dz-content">
-              <div class="dz-icon">📎</div>
-              <div class="dz-text">
-                <strong>Arrastra o haz click para subir</strong>
-                <span>PDF, imagen o documento</span>
-              </div>
-            </div>
+            <input
+              id="linkInput"
+              name="archivo_link"
+              type="url"
+              placeholder="https://github.com/... o drive/dropbox"
+            />
 
-            <div id="filePreview" class="file-preview hidden"></div>
+            <button type="button" id="clearLink" class="clear-link">✕</button>
           </div>
+
+          <div id="linkPreview" class="link-preview hidden"></div>
+
+          <span class="field-hint">
+            Se detecta automáticamente GitHub, Drive, Dropbox…
+          </span>
         </div>
 
-        <button id="submitBtn" type="submit" class="btn btn-full">
+        <button type="submit" class="btn btn-full">
           Enviar mensaje
         </button>
 
-        <p id="status" class="form-status"></p>
       </form>
 
     </div>
@@ -94,195 +99,137 @@
 </section>
 
 <script>
-  const form = document.getElementById("contactForm");
-  const dropzone = document.getElementById("dropzone");
-  const fileInput = document.getElementById("fileInput");
-  const filePreview = document.getElementById("filePreview");
+  const input = document.getElementById("linkInput");
+  const preview = document.getElementById("linkPreview");
+  const icon = document.getElementById("linkIcon");
+  const wrapper = document.getElementById("linkWrapper");
+  const clearBtn = document.getElementById("clearLink");
 
-  const status = document.getElementById("status");
-  const btn = document.getElementById("submitBtn");
-
-  // OPEN FILE
-  dropzone.addEventListener("click", () => fileInput.click());
-
-  // DRAG
-  dropzone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropzone.classList.add("drag");
-  });
-
-  dropzone.addEventListener("dragleave", () => {
-    dropzone.classList.remove("drag");
-  });
-
-  dropzone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropzone.classList.remove("drag");
-
-    fileInput.files = e.dataTransfer.files;
-    renderFile();
-  });
-
-  fileInput.addEventListener("change", renderFile);
-
-  // FILE RENDER
-  function renderFile() {
-    const file = fileInput.files[0];
-    if (!file) return;
-
-    filePreview.classList.remove("hidden");
-
-    const removeIcon = `
-      <button type="button" class="remove-file" id="removeFile" aria-label="remove">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M18 6L6 18M6 6l12 12"/>
-        </svg>
-      </button>
-    `;
-
-    if (file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        filePreview.innerHTML = `
-          <img src="${e.target.result}" />
-          <span>${file.name}</span>
-          ${removeIcon}
-        `;
-        attachRemove();
-      };
-      reader.readAsDataURL(file);
-    } else {
-      filePreview.innerHTML = `
-        <div class="file-icon">📄</div>
-        <span>${file.name}</span>
-        ${removeIcon}
-      `;
-      attachRemove();
-    }
+  function detectPlatform(url) {
+    if (url.includes("github.com")) return { name: "GitHub", icon: "🐙" };
+    if (url.includes("drive.google.com")) return { name: "Google Drive", icon: "📁" };
+    if (url.includes("dropbox.com")) return { name: "Dropbox", icon: "🧊" };
+    if (url.includes("notion.so")) return { name: "Notion", icon: "📝" };
+    if (url.includes("figma.com")) return { name: "Figma", icon: "🎨" };
+    return { name: "Enlace", icon: "🔗" };
   }
 
-  function attachRemove() {
-    document.getElementById("removeFile").addEventListener("click", (e) => {
-      e.stopPropagation();
-
-      fileInput.value = "";
-      filePreview.classList.add("hidden");
-      filePreview.innerHTML = "";
-    });
-  }
-
-  // SUBMIT
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    btn.disabled = true;
-    btn.textContent = "Enviando...";
-
-    const formData = new FormData(form);
-
+  function isValidURL(str) {
     try {
-      const res = await fetch("https://formspree.io/f/xlgaejzd", {
-        method: "POST",
-        body: formData,
-        headers: { Accept: "application/json" }
-      });
-
-      if (res.ok) {
-        status.textContent = "✓ Mensaje enviado";
-        status.style.color = "#4ade80";
-        form.reset();
-        filePreview.classList.add("hidden");
-        filePreview.innerHTML = "";
-      } else {
-        status.textContent = "Error al enviar";
-        status.style.color = "#f87171";
-      }
+      new URL(str);
+      return true;
     } catch {
-      status.textContent = "Error de conexión";
-      status.style.color = "#f87171";
+      return false;
+    }
+  }
+
+  input.addEventListener("input", () => {
+    const url = input.value.trim();
+
+    if (!url) {
+      preview.classList.add("hidden");
+      wrapper.classList.remove("valid", "invalid");
+      icon.textContent = "🔗";
+      return;
     }
 
-    btn.disabled = false;
-    btn.textContent = "Enviar mensaje";
+    if (!isValidURL(url)) {
+      wrapper.classList.add("invalid");
+      wrapper.classList.remove("valid");
+      preview.classList.add("hidden");
+      icon.textContent = "⚠️";
+      return;
+    }
+
+    const platform = detectPlatform(url);
+
+    wrapper.classList.add("valid");
+    wrapper.classList.remove("invalid");
+    icon.textContent = platform.icon;
+
+    preview.classList.remove("hidden");
+    preview.innerHTML = `
+      <span class="lp-icon">${platform.icon}</span>
+      <div class="lp-meta">
+        <strong>${platform.name}</strong>
+        <a href="${url}" target="_blank">${url}</a>
+      </div>
+    `;
+  });
+
+  clearBtn.addEventListener("click", () => {
+    input.value = "";
+    preview.classList.add("hidden");
+    wrapper.classList.remove("valid", "invalid");
+    icon.textContent = "🔗";
   });
 </script>
 
 <style>
-.dropzone {
-  border: 1px dashed rgba(255,255,255,0.15);
-  border-radius: 12px;
-  padding: 14px;
-  cursor: pointer;
-  transition: 0.2s ease;
-  background: rgba(255,255,255,0.02);
-}
-
-.dropzone.drag {
-  border-color: rgba(74,222,128,0.7);
-  background: rgba(74,222,128,0.06);
-}
-
-.dz-content {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.dz-icon {
-  opacity: 0.7;
-}
-
-.dz-text strong {
-  display: block;
-  font-size: 13px;
-}
-
-.dz-text span {
-  font-size: 11px;
-  opacity: 0.5;
-}
-
-.file-preview {
-  margin-top: 10px;
+.link-input-wrapper {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 10px;
-  background: rgba(255,255,255,0.03);
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.02);
+  transition: 0.2s;
 }
 
-.file-preview img {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  object-fit: cover;
+.link-input-wrapper.valid {
+  border-color: rgba(74,222,128,0.6);
 }
 
-.file-icon {
+.link-input-wrapper.invalid {
+  border-color: rgba(248,113,113,0.7);
+}
+
+.link-icon {
   opacity: 0.7;
 }
 
-/* REMOVE BUTTON (SENIOR UX) */
-.remove-file {
+.clear-link {
   margin-left: auto;
-  opacity: 0;
   border: none;
   background: transparent;
   color: rgba(255,255,255,0.4);
   cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  transition: all 0.15s ease;
 }
 
-.file-preview:hover .remove-file {
-  opacity: 1;
-}
-
-.remove-file:hover {
+.clear-link:hover {
   color: white;
-  background: rgba(255,255,255,0.06);
-  transform: scale(1.05);
+}
+
+.link-preview {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  align-items: center;
+}
+
+.lp-icon {
+  font-size: 18px;
+}
+
+.lp-meta strong {
+  display: block;
+  font-size: 13px;
+}
+
+.lp-meta a {
+  font-size: 11px;
+  opacity: 0.6;
+  word-break: break-all;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.5;
 }
 </style>
