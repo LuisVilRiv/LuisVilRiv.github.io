@@ -1,6 +1,4 @@
 ---
-// Skills.astro
-
 const tierOrder = {
   high: 0,
   mid: 1,
@@ -57,28 +55,31 @@ const skills = [
 ];
 ---
 
-<section class="terminal" id="skills">
+<section class="skills">
   <div class="wrap">
 
-    <!-- HEADER SUTIL -->
     <pre class="header">
-<span id="typing"></span><span class="cursor">▌</span>
+<span class="cmd">$ skills --list</span>
+<span class="status">system: ready</span>
     </pre>
 
-    <h2 class="title">$ skills</h2>
+    <h2 class="title">Skills</h2>
 
-    <div class="box">
+    <div class="grid">
 
-      {skills.map((col, i) => (
-        <div class="block" style={`animation-delay:${i * 80}ms`}>
-          <div class="block-title">[{col.label}]</div>
+      {skills.map((col) => (
+        <div class="card">
+
+          <div class="card-title">
+            [{col.label}]
+          </div>
 
           <div class="items">
-            {col.items.map((item, j) => (
-              <div class="line" style={`animation-delay:${j * 25}ms`}>
-                <span class={`dot dot-${item.tier}`}></span>
+            {col.items.map((item) => (
+              <div class={`row ${item.tier}`}>
+                <span class={`dot ${item.tier}`}></span>
                 <span class="name">{item.label}</span>
-                <span class="tier">[{item.tier}]</span>
+                <span class="tag">{item.tier}</span>
               </div>
             ))}
           </div>
@@ -87,125 +88,115 @@ const skills = [
       ))}
 
     </div>
+
   </div>
 </section>
 
-<script is:inline>
-const text = "loading skills module...";
-const el = document.getElementById("typing");
-
-let i = 0;
-
-function type() {
-  if (i < text.length) {
-    el.textContent += text[i];
-    i++;
-    setTimeout(type, 22);
-  }
-}
-
-type();
-</script>
-
 <style>
-.terminal {
+.skills {
   font-family: var(--mono);
-  color: #c8fff3;
+  color: #e6fffb;
 }
 
-/* header */
+/* HEADER LIMPIO */
 .header {
+  display: flex;
+  justify-content: space-between;
   font-size: 0.78rem;
+  margin-bottom: 1.2rem;
   color: var(--muted);
-  min-height: 22px;
-  margin-bottom: 0.5rem;
 }
 
-.cursor {
-  animation: blink 1s infinite;
+.cmd {
   color: var(--accent);
 }
 
-@keyframes blink {
-  50% { opacity: 0; }
+.status {
+  color: rgba(0,255,202,0.7);
 }
 
+/* TITULO */
 .title {
   font-size: 1rem;
-  margin: 1rem 0;
+  margin-bottom: 1.4rem;
   color: var(--accent);
   letter-spacing: 0.05em;
 }
 
-/* container */
-.box {
-  border: 1px solid rgba(0,255,202,0.18);
-  background: rgba(0,0,0,0.22);
+/* GRID tipo dashboard */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* CARD limpia */
+.card {
+  padding: 1.2rem;
   border-radius: var(--rl);
-  padding: 1.3rem;
+  border: 1px solid rgba(0,255,202,0.15);
+  background: rgba(0,0,0,0.18);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-/* blocks */
-.block {
-  margin-bottom: 1.2rem;
-  opacity: 0;
-  transform: translateY(6px);
-  animation: fadeIn 0.35s ease forwards;
+.card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0,255,202,0.35);
 }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.block-title {
+/* HEADER DE BLOQUE */
+.card-title {
   font-size: 0.7rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.9rem;
+  opacity: 0.9;
 }
 
-/* items */
+/* FILAS (ya no “lista”, ahora “rows”) */
 .items {
   display: flex;
   flex-direction: column;
-  gap: 0.32rem;
+  gap: 0.35rem;
 }
 
-.line {
+.row {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   font-size: 0.78rem;
-
-  opacity: 0;
-  animation: fadeIn 0.25s ease forwards;
+  padding: 0.15rem 0;
 }
 
-.name {
-  flex: 1;
-}
-
-/* dot */
+/* DOT */
 .dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
 }
 
-.dot-high { background: var(--accent); }
-.dot-mid { background: rgba(0,255,202,0.5); }
-.dot-base { background: rgba(255,255,255,0.25); }
-
-/* tier text subtle */
-.tier {
-  font-size: 0.65rem;
-  opacity: 0.45;
+/* TEXTO */
+.name {
+  flex: 1;
 }
 
-.high .name { color: #e6fffb; }
+.tag {
+  font-size: 0.6rem;
+  opacity: 0.45;
+  text-transform: uppercase;
+}
+
+/* TIERS equilibrados (PRO UX) */
+.high .name { color: #eafffb; }
 .mid .name { color: #b8d4d0; }
-.base .name { color: rgba(255,255,255,0.6); }
+.base .name { color: rgba(255,255,255,0.65); }
+
+.high .tag { color: var(--accent); }
+.mid .tag { color: rgba(0,255,202,0.6); }
+.base .tag { color: rgba(255,255,255,0.35); }
+
+.dot.high { background: var(--accent); }
+.dot.mid { background: rgba(0,255,202,0.5); }
+.dot.base { background: rgba(255,255,255,0.25); }
 </style>
