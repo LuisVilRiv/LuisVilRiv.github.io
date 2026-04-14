@@ -1,222 +1,183 @@
 ---
-// Skills.astro
-// tier: "high" | "mid" | "base"
+// Skills.astro (terminal mode)
+
+const tierOrder = {
+  high: 0,
+  mid: 1,
+  base: 2,
+};
+
 const skills = [
   {
     label: "web",
     items: [
-      { label: "HTML",     tier: "high" },
-      { label: "CSS",      tier: "high" },
-      { label: "Astro",    tier: "mid"  },
-      { label: "PHP",      tier: "mid"  },
+      { label: "HTML", tier: "high" },
+      { label: "CSS", tier: "high" },
+      { label: "Astro", tier: "mid" },
+      { label: "PHP", tier: "mid" },
       { label: "Markdown", tier: "high" },
-    ],
+    ].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]),
   },
   {
     label: "backend & datos",
     items: [
-      { label: "Python",  tier: "high" },
-      { label: "MySQL",   tier: "mid"  },
-      { label: "SQLite",  tier: "mid"  },
+      { label: "Python", tier: "high" },
+      { label: "MySQL", tier: "mid" },
+      { label: "SQLite", tier: "mid" },
       { label: "tkinter", tier: "base" },
-    ],
+    ].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]),
   },
   {
     label: "sistemas & devops",
     items: [
-      { label: "Linux",          tier: "high" },
-      { label: "Bash",           tier: "high" },
-      { label: "Docker",         tier: "high" },
+      { label: "Linux", tier: "high" },
+      { label: "Bash", tier: "high" },
+      { label: "Docker", tier: "high" },
       { label: "Docker Compose", tier: "high" },
-      { label: "PowerShell",     tier: "mid"  },
-      { label: "Windows Server", tier: "mid"  },
-      { label: "VMware",         tier: "mid"  },
-      { label: "Graph API",      tier: "base" },
-      { label: "Intune",         tier: "base" },
-      { label: "Microsoft 365",  tier: "base" },
-    ],
+      { label: "PowerShell", tier: "mid" },
+      { label: "Windows Server", tier: "mid" },
+      { label: "VMware", tier: "mid" },
+      { label: "Graph API", tier: "base" },
+      { label: "Intune", tier: "base" },
+      { label: "Microsoft 365", tier: "base" },
+    ].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]),
   },
   {
-    label: "herramientas & IA",
+    label: "herramientas & ia",
     items: [
-      { label: "Git",             tier: "high" },
-      { label: "GitHub",          tier: "high" },
-      { label: "VS Code",         tier: "high" },
-      { label: "GitHub Copilot",  tier: "mid"  },
-      { label: "Claude Code",     tier: "mid"  },
-      { label: "Power Automate",  tier: "base" },
-      { label: "Prompting",       tier: "mid"  },
-    ],
+      { label: "Git", tier: "high" },
+      { label: "GitHub", tier: "high" },
+      { label: "VS Code", tier: "high" },
+      { label: "Copilot", tier: "mid" },
+      { label: "Claude Code", tier: "mid" },
+      { label: "Power Automate", tier: "base" },
+      { label: "Prompting", tier: "mid" },
+    ].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]),
   },
 ];
 ---
 
-<section id="habilidades" class="section">
+<section id="habilidades" class="terminal">
   <div class="wrap">
-    <span class="sec-label">// 03</span>
-    <h2 class="sec-title">Habilidades</h2>
-    <p class="sec-sub">Tecnologías con las que trabajo de verdad.</p>
 
-    <div class="skills-legend">
-      <span class="legend-item"><span class="dot dot-high"></span>dominio alto</span>
-      <span class="legend-item"><span class="dot dot-mid"></span>nivel medio</span>
-      <span class="legend-item"><span class="dot dot-base"></span>conocimientos base</span>
-    </div>
+    <pre class="terminal-header">
+&gt; skills --scan
+&gt; loading modules...
+&gt; status: OK
+    </pre>
 
-    <div class="skills-grid">
+    <h2 class="title">$ cat skills.log</h2>
+
+    <div class="terminal-box">
       {skills.map((col) => (
-        <div class="skill-block fade-up">
-          <span class="skill-cat-label">
-            <span class="skill-cat-icon">◈</span>
-            {col.label}
-          </span>
-          <div class="skill-chips">
+        <div class="block">
+          <div class="block-header">
+            [{col.label.toUpperCase()}]
+          </div>
+
+          <div class="block-content">
             {col.items.map((item) => (
-              <span class={`chip chip-${item.tier}`}>
-                <span class={`chip-dot dot-${item.tier}`}></span>
-                {item.label}
-              </span>
+              <div class={`line ${item.tier}`}>
+                <span class="prompt">&gt;</span>
+                <span class="name">{item.label}</span>
+                <span class="tier">[{item.tier}]</span>
+              </div>
             ))}
           </div>
         </div>
       ))}
     </div>
+
+    <pre class="footer">
+scan complete — no errors detected ✔
+    </pre>
+
   </div>
 </section>
 
 <style>
-  .skills-legend {
-    display: flex;
-    gap: 1.8rem;
-    align-items: center;
-    margin-bottom: 2.5rem;
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
+.terminal {
+  font-family: var(--mono);
+  color: #c8fff3;
+}
 
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-  }
+.terminal-header {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
 
-  .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+.title {
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
 
-  .dot-high { background: var(--accent); box-shadow: 0 0 6px rgba(0,255,202,0.6); }
-  .dot-mid  { background: rgba(0,255,202,0.45); }
-  .dot-base { background: var(--muted); }
+.terminal-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  border: 1px solid rgba(0,255,202,0.25);
+  padding: 1.5rem;
+  border-radius: var(--rl);
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(8px);
+}
 
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.2rem;
-  }
+.block-header {
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.12em;
+}
 
-  /* Bloque de sistemas ocupa las dos columnas */
-  .skill-block:nth-child(3) {
-    grid-column: 1 / -1;
-  }
+.block-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
 
-  .skill-block {
-    padding: 1.5rem 1.6rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--rl);
-    transition: border-color 0.25s;
-  }
+.line {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  align-items: center;
+}
 
-  .skill-block:hover { border-color: var(--bord2); }
+.prompt {
+  color: var(--accent);
+}
 
-  .skill-cat-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.62rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.1rem;
-    opacity: 0.85;
-  }
+.name {
+  flex: 1;
+  color: #d7fff7;
+}
 
-  .skill-cat-icon {
-    opacity: 0.6;
-    font-size: 0.7rem;
-  }
+.tier {
+  font-size: 0.65rem;
+  opacity: 0.7;
+}
 
-  .skill-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-  }
+/* TIER STYLING */
+.high .name { color: #d7fff7; }
+.mid .name { color: #a9d6cf; }
+.base .name { color: rgba(255,255,255,0.55); }
 
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    padding: 0.3rem 0.75rem;
-    border-radius: 5px;
-    border: 1px solid;
-    transition: border-color 0.2s, background 0.2s, color 0.2s;
-    white-space: nowrap;
-  }
+.high .tier { color: var(--accent); }
+.mid .tier { color: rgba(0,255,202,0.6); }
+.base .tier { color: rgba(255,255,255,0.35); }
 
-  .chip-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    transition: box-shadow 0.2s;
-  }
+.line:hover {
+  background: rgba(0,255,202,0.06);
+  padding-left: 0.3rem;
+  border-left: 2px solid var(--accent);
+}
 
-  /* tier: high */
-  .chip-high {
-    background: rgba(0,255,202,0.06);
-    border-color: rgba(0,255,202,0.3);
-    color: #c0f5ee;
-  }
-  .chip-high:hover {
-    background: rgba(0,255,202,0.12);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .chip-high:hover .chip-dot { box-shadow: 0 0 8px rgba(0,255,202,0.8); }
-
-  /* tier: mid */
-  .chip-mid {
-    background: rgba(0,255,202,0.02);
-    border-color: rgba(0,255,202,0.12);
-    color: var(--muted2);
-  }
-  .chip-mid:hover {
-    background: rgba(0,255,202,0.07);
-    border-color: rgba(0,255,202,0.25);
-    color: #a0b8cc;
-  }
-
-  /* tier: base */
-  .chip-base {
-    background: transparent;
-    border-color: var(--border);
-    color: var(--muted);
-  }
-  .chip-base:hover {
-    border-color: var(--bord2);
-    color: var(--muted2);
-  }
-
-  @media (max-width: 580px) {
-    .skills-grid { grid-template-columns: 1fr; }
-    .skill-block:nth-child(3) { grid-column: auto; }
-    .skills-legend { flex-wrap: wrap; gap: 1rem; }
-  }
+.footer {
+  margin-top: 1.5rem;
+  color: rgba(0,255,202,0.6);
+  font-size: 0.75rem;
+}
 </style>
