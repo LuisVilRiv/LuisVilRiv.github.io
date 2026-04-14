@@ -1,55 +1,51 @@
 ---
 // Skills.astro
+// tier: "high" | "mid" | "base"
 const skills = [
   {
-    label: "🌐 web",
+    label: "web",
     items: [
-      { label: "HTML", level: 95 },
-      { label: "CSS", level: 92 },
-      { label: "Astro", level: 65 },
-      { label: "PHP", level: 80 },
-      { label: "Markdown", level: 90 },
+      { label: "HTML",     tier: "high" },
+      { label: "CSS",      tier: "high" },
+      { label: "Astro",    tier: "mid"  },
+      { label: "PHP",      tier: "mid"  },
+      { label: "Markdown", tier: "high" },
     ],
   },
   {
-    label: "🧠 backend & datos",
+    label: "backend & datos",
     items: [
-      { label: "Python", level: 85 },
-      { label: "MySQL", level: 82 },
-      { label: "SQLite", level: 72 },
-      { label: "tkinter", level: 55 },
+      { label: "Python",  tier: "high" },
+      { label: "MySQL",   tier: "mid"  },
+      { label: "SQLite",  tier: "mid"  },
+      { label: "tkinter", tier: "base" },
     ],
   },
   {
-    label: "🖥️ sistemas & devops",
+    label: "sistemas & devops",
     items: [
-      { label: "Linux", level: 90 },
-      { label: "PowerShell", level: 78 },
-      { label: "Docker", level: 85 },
-      { label: "Bash", level: 87 },
-      { label: "Windows Server", level: 72 },
-      { label: "Graph API", level: 55 },
-      { label: "Intune", level: 55 },
-      { label: "VMware", level: 70 },
-      { label: "Docker Compose", level: 85 },
-      { label: "Microsoft 365", level: 65 },
+      { label: "Linux",          tier: "high" },
+      { label: "Bash",           tier: "high" },
+      { label: "Docker",         tier: "high" },
+      { label: "Docker Compose", tier: "high" },
+      { label: "PowerShell",     tier: "mid"  },
+      { label: "Windows Server", tier: "mid"  },
+      { label: "VMware",         tier: "mid"  },
+      { label: "Graph API",      tier: "base" },
+      { label: "Intune",         tier: "base" },
+      { label: "Microsoft 365",  tier: "base" },
     ],
   },
   {
-    label: "🛠️ herramientas",
+    label: "herramientas & IA",
     items: [
-      { label: "Git", level: 92 },
-      { label: "GitHub", level: 90 },
-      { label: "VS Code", level: 95 },
-      { label: "Power Automate", level: 55 },
-    ],
-  },
-  {
-    label: "🤖 ia & productividad",
-    items: [
-      { label: "GitHub Copilot", level: 80 },
-      { label: "Claude Code", level: 65 },
-      { label: "Prompting técnico", level: 75 },
+      { label: "Git",             tier: "high" },
+      { label: "GitHub",          tier: "high" },
+      { label: "VS Code",         tier: "high" },
+      { label: "GitHub Copilot",  tier: "mid"  },
+      { label: "Claude Code",     tier: "mid"  },
+      { label: "Power Automate",  tier: "base" },
+      { label: "Prompting",       tier: "mid"  },
     ],
   },
 ];
@@ -61,21 +57,25 @@ const skills = [
     <h2 class="sec-title">Habilidades</h2>
     <p class="sec-sub">Tecnologías con las que trabajo de verdad.</p>
 
+    <div class="skills-legend">
+      <span class="legend-item"><span class="dot dot-high"></span>dominio alto</span>
+      <span class="legend-item"><span class="dot dot-mid"></span>nivel medio</span>
+      <span class="legend-item"><span class="dot dot-base"></span>conocimientos base</span>
+    </div>
+
     <div class="skills-grid">
       {skills.map((col) => (
         <div class="skill-block fade-up">
-          <span class="skill-label">{col.label}</span>
-          <div class="skill-items">
+          <span class="skill-cat-label">
+            <span class="skill-cat-icon">◈</span>
+            {col.label}
+          </span>
+          <div class="skill-chips">
             {col.items.map((item) => (
-              <div class="skill-item">
-                <div class="skill-header">
-                  <span class="skill-name">{item.label}</span>
-                  <span class="skill-level">{item.level}%</span>
-                </div>
-                <div class="skill-bar">
-                  <div class="skill-fill" style={`width: ${item.level}%`}></div>
-                </div>
-              </div>
+              <span class={`chip chip-${item.tier}`}>
+                <span class={`chip-dot dot-${item.tier}`}></span>
+                {item.label}
+              </span>
             ))}
           </div>
         </div>
@@ -83,3 +83,140 @@ const skills = [
     </div>
   </div>
 </section>
+
+<style>
+  .skills-legend {
+    display: flex;
+    gap: 1.8rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-high { background: var(--accent); box-shadow: 0 0 6px rgba(0,255,202,0.6); }
+  .dot-mid  { background: rgba(0,255,202,0.45); }
+  .dot-base { background: var(--muted); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+
+  /* Bloque de sistemas ocupa las dos columnas */
+  .skill-block:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+
+  .skill-block {
+    padding: 1.5rem 1.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--rl);
+    transition: border-color 0.25s;
+  }
+
+  .skill-block:hover { border-color: var(--bord2); }
+
+  .skill-cat-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.1rem;
+    opacity: 0.85;
+  }
+
+  .skill-cat-icon {
+    opacity: 0.6;
+    font-size: 0.7rem;
+  }
+
+  .skill-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 5px;
+    border: 1px solid;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+
+  .chip-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: box-shadow 0.2s;
+  }
+
+  /* tier: high */
+  .chip-high {
+    background: rgba(0,255,202,0.06);
+    border-color: rgba(0,255,202,0.3);
+    color: #c0f5ee;
+  }
+  .chip-high:hover {
+    background: rgba(0,255,202,0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .chip-high:hover .chip-dot { box-shadow: 0 0 8px rgba(0,255,202,0.8); }
+
+  /* tier: mid */
+  .chip-mid {
+    background: rgba(0,255,202,0.02);
+    border-color: rgba(0,255,202,0.12);
+    color: var(--muted2);
+  }
+  .chip-mid:hover {
+    background: rgba(0,255,202,0.07);
+    border-color: rgba(0,255,202,0.25);
+    color: #a0b8cc;
+  }
+
+  /* tier: base */
+  .chip-base {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--muted);
+  }
+  .chip-base:hover {
+    border-color: var(--bord2);
+    color: var(--muted2);
+  }
+
+  @media (max-width: 580px) {
+    .skills-grid { grid-template-columns: 1fr; }
+    .skill-block:nth-child(3) { grid-column: auto; }
+    .skills-legend { flex-wrap: wrap; gap: 1rem; }
+  }
+</style>
