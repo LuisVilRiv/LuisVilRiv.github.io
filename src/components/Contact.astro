@@ -59,20 +59,15 @@
             <input id="fileInput" name="archivo" type="file" hidden />
 
             <div class="dz-content">
-              <div class="dz-icon">📁</div>
+              <div class="dz-icon">📎</div>
               <div class="dz-text">
-                <strong>Arrastra aquí o haz click</strong>
+                <strong>Arrastra o haz click para subir</strong>
                 <span>PDF, imagen o documento</span>
               </div>
             </div>
 
             <div id="filePreview" class="file-preview hidden"></div>
           </div>
-        </div>
-
-        <!-- PROGRESS -->
-        <div id="progressWrap" class="progress hidden">
-          <div id="progressBar" class="progress-bar"></div>
         </div>
 
         <button id="submitBtn" type="submit" class="btn btn-full">
@@ -95,17 +90,10 @@
   const status = document.getElementById("status");
   const btn = document.getElementById("submitBtn");
 
-  const progressWrap = document.getElementById("progressWrap");
-  const progressBar = document.getElementById("progressBar");
-
-  // -------------------------
   // OPEN FILE
-  // -------------------------
   dropzone.addEventListener("click", () => fileInput.click());
 
-  // -------------------------
-  // DRAG & DROP
-  // -------------------------
+  // DRAG
   dropzone.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropzone.classList.add("drag");
@@ -125,48 +113,44 @@
 
   fileInput.addEventListener("change", renderFile);
 
-  // -------------------------
-  // FILE PREVIEW
-  // -------------------------
+  // FILE RENDER
   function renderFile() {
     const file = fileInput.files[0];
     if (!file) return;
 
     filePreview.classList.remove("hidden");
 
-    const removeBtn = `
-      <button type="button" class="remove-file" id="removeFile">
-        remove
+    const removeIcon = `
+      <button type="button" class="remove-file" id="removeFile" aria-label="remove">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
       </button>
     `;
 
     if (file.type.startsWith("image/")) {
       const reader = new FileReader();
-
       reader.onload = (e) => {
         filePreview.innerHTML = `
           <img src="${e.target.result}" />
           <span>${file.name}</span>
-          ${removeBtn}
+          ${removeIcon}
         `;
         attachRemove();
       };
-
       reader.readAsDataURL(file);
     } else {
       filePreview.innerHTML = `
         <div class="file-icon">📄</div>
         <span>${file.name}</span>
-        ${removeBtn}
+        ${removeIcon}
       `;
       attachRemove();
     }
   }
 
   function attachRemove() {
-    const btnRemove = document.getElementById("removeFile");
-
-    btnRemove.addEventListener("click", (e) => {
+    document.getElementById("removeFile").addEventListener("click", (e) => {
       e.stopPropagation();
 
       fileInput.value = "";
@@ -175,75 +159,55 @@
     });
   }
 
-  // -------------------------
-  // SUBMIT (XHR + progress)
-  // -------------------------
-  form.addEventListener("submit", (e) => {
+  // SUBMIT
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     btn.disabled = true;
     btn.textContent = "Enviando...";
 
-    progressWrap.classList.remove("hidden");
-    progressBar.style.width = "0%";
-
     const formData = new FormData(form);
 
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://formspree.io/f/xlgaejzd");
-    xhr.setRequestHeader("Accept", "application/json");
+    try {
+      const res = await fetch("https://formspree.io/f/xlgaejzd", {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" }
+      });
 
-    xhr.upload.onprogress = (e) => {
-      if (e.lengthComputable) {
-        const percent = (e.loaded / e.total) * 100;
-        progressBar.style.width = percent + "%";
-      }
-    };
-
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        status.textContent = "✅ Mensaje enviado correctamente";
+      if (res.ok) {
+        status.textContent = "✓ Mensaje enviado";
         status.style.color = "#4ade80";
         form.reset();
-
         filePreview.classList.add("hidden");
         filePreview.innerHTML = "";
       } else {
-        status.textContent = "❌ Error al enviar";
+        status.textContent = "Error al enviar";
         status.style.color = "#f87171";
       }
-
-      btn.disabled = false;
-      btn.textContent = "Enviar mensaje";
-      progressWrap.classList.add("hidden");
-    };
-
-    xhr.onerror = () => {
-      status.textContent = "❌ Error de conexión";
+    } catch {
+      status.textContent = "Error de conexión";
       status.style.color = "#f87171";
+    }
 
-      btn.disabled = false;
-      btn.textContent = "Enviar mensaje";
-      progressWrap.classList.add("hidden");
-    };
-
-    xhr.send(formData);
+    btn.disabled = false;
+    btn.textContent = "Enviar mensaje";
   });
 </script>
 
 <style>
 .dropzone {
-  border: 1px dashed rgba(255,255,255,0.2);
+  border: 1px dashed rgba(255,255,255,0.15);
   border-radius: 12px;
-  padding: 16px;
+  padding: 14px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease;
   background: rgba(255,255,255,0.02);
 }
 
 .dropzone.drag {
-  border-color: #4ade80;
-  background: rgba(74,222,128,0.08);
+  border-color: rgba(74,222,128,0.7);
+  background: rgba(74,222,128,0.06);
 }
 
 .dz-content {
@@ -253,66 +217,60 @@
 }
 
 .dz-icon {
-  font-size: 20px;
+  opacity: 0.7;
+}
+
+.dz-text strong {
+  display: block;
+  font-size: 13px;
 }
 
 .dz-text span {
-  font-size: 12px;
-  opacity: 0.6;
-  display: block;
+  font-size: 11px;
+  opacity: 0.5;
 }
 
 .file-preview {
   margin-top: 10px;
   display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
 }
 
 .file-preview img {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   border-radius: 6px;
   object-fit: cover;
 }
 
-.hidden {
-  display: none;
+.file-icon {
+  opacity: 0.7;
 }
 
+/* REMOVE BUTTON (SENIOR UX) */
 .remove-file {
   margin-left: auto;
+  opacity: 0;
+  border: none;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.7);
-  border-radius: 8px;
-  padding: 4px 10px;
-  font-size: 11px;
+  color: rgba(255,255,255,0.4);
   cursor: pointer;
-  transition: 0.2s;
-  letter-spacing: 0.5px;
-  text-transform: lowercase;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.file-preview:hover .remove-file {
+  opacity: 1;
 }
 
 .remove-file:hover {
-  border-color: rgba(255,255,255,0.35);
   color: white;
-  background: rgba(255,255,255,0.04);
-  transform: translateY(-1px);
-}
-
-.progress {
-  height: 4px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 999px;
-  overflow: hidden;
-  margin: 10px 0;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: #4ade80;
-  transition: width 0.2s;
+  background: rgba(255,255,255,0.06);
+  transform: scale(1.05);
 }
 </style>
