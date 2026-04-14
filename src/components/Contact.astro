@@ -99,7 +99,7 @@
   const progressBar = document.getElementById("progressBar");
 
   // -------------------------
-  // OPEN FILE PICKER
+  // OPEN FILE
   // -------------------------
   dropzone.addEventListener("click", () => fileInput.click());
 
@@ -126,7 +126,7 @@
   fileInput.addEventListener("change", renderFile);
 
   // -------------------------
-  // FILE PREVIEW + REMOVE
+  // FILE PREVIEW
   // -------------------------
   function renderFile() {
     const file = fileInput.files[0];
@@ -135,11 +135,14 @@
     filePreview.classList.remove("hidden");
 
     const removeBtn = `
-      <button type="button" class="remove-file" id="removeFile">✕</button>
+      <button type="button" class="remove-file" id="removeFile">
+        remove
+      </button>
     `;
 
     if (file.type.startsWith("image/")) {
       const reader = new FileReader();
+
       reader.onload = (e) => {
         filePreview.innerHTML = `
           <img src="${e.target.result}" />
@@ -148,6 +151,7 @@
         `;
         attachRemove();
       };
+
       reader.readAsDataURL(file);
     } else {
       filePreview.innerHTML = `
@@ -172,7 +176,7 @@
   }
 
   // -------------------------
-  // SUBMIT (XHR progress)
+  // SUBMIT (XHR + progress)
   // -------------------------
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -201,6 +205,7 @@
         status.textContent = "✅ Mensaje enviado correctamente";
         status.style.color = "#4ade80";
         form.reset();
+
         filePreview.classList.add("hidden");
         filePreview.innerHTML = "";
       } else {
@@ -278,18 +283,22 @@
 .remove-file {
   margin-left: auto;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.2);
-  color: white;
-  border-radius: 6px;
-  padding: 2px 6px;
-  font-size: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 11px;
   cursor: pointer;
-  opacity: 0.7;
+  transition: 0.2s;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
 }
 
 .remove-file:hover {
-  opacity: 1;
-  border-color: rgba(255,255,255,0.4);
+  border-color: rgba(255,255,255,0.35);
+  color: white;
+  background: rgba(255,255,255,0.04);
+  transform: translateY(-1px);
 }
 
 .progress {
