@@ -1,6 +1,4 @@
 ---
-// Skills.astro (terminal mode)
-
 const tierOrder = {
   high: 0,
   mid: 1,
@@ -42,42 +40,30 @@ const skills = [
       { label: "Microsoft 365", tier: "base" },
     ].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]),
   },
-  {
-    label: "herramientas & ia",
-    items: [
-      { label: "Git", tier: "high" },
-      { label: "GitHub", tier: "high" },
-      { label: "VS Code", tier: "high" },
-      { label: "Copilot", tier: "mid" },
-      { label: "Claude Code", tier: "mid" },
-      { label: "Power Automate", tier: "base" },
-      { label: "Prompting", tier: "mid" },
-    ].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]),
-  },
 ];
 ---
 
-<section id="habilidades" class="terminal">
+<section class="terminal" id="skills">
   <div class="wrap">
 
+    <!-- HEADER TYPING -->
     <pre class="terminal-header">
-&gt; skills --scan
-&gt; loading modules...
-&gt; status: OK
+<span id="boot"></span><span class="cursor">█</span>
     </pre>
 
-    <h2 class="title">$ cat skills.log</h2>
+    <h2 class="title">$ skills --scan</h2>
 
-    <div class="terminal-box">
-      {skills.map((col) => (
-        <div class="block">
+    <div class="terminal-box" id="scanBox">
+
+      {skills.map((col, colIndex) => (
+        <div class="block hidden" data-block={colIndex}>
           <div class="block-header">
             [{col.label.toUpperCase()}]
           </div>
 
           <div class="block-content">
             {col.items.map((item) => (
-              <div class={`line ${item.tier}`}>
+              <div class={`line ${item.tier} hidden-line`}>
                 <span class="prompt">&gt;</span>
                 <span class="name">{item.label}</span>
                 <span class="tier">[{item.tier}]</span>
@@ -86,14 +72,72 @@ const skills = [
           </div>
         </div>
       ))}
+
     </div>
 
-    <pre class="footer">
-scan complete — no errors detected ✔
-    </pre>
+    <pre class="footer" id="footer"></pre>
 
   </div>
 </section>
+
+<script is:inline>
+const bootText = [
+  "initializing skills module...",
+  "loading dependencies...",
+  "scanning repositories...",
+  "mapping competencies...",
+  "status: READY"
+];
+
+const bootEl = document.getElementById("boot");
+const footerEl = document.getElementById("footer");
+
+let i = 0;
+let char = 0;
+
+function type() {
+  if (i >= bootText.length) {
+    setTimeout(startScan, 500);
+    return;
+  }
+
+  const line = bootText[i];
+
+  if (char < line.length) {
+    bootEl.innerHTML += line[char];
+    char++;
+    setTimeout(type, 18);
+  } else {
+    bootEl.innerHTML += "\n";
+    i++;
+    char = 0;
+    setTimeout(type, 180);
+  }
+}
+
+function startScan() {
+  footerEl.textContent = "scan complete — rendering modules...";
+
+  const blocks = document.querySelectorAll(".block");
+
+  blocks.forEach((block, i) => {
+    setTimeout(() => {
+      block.classList.remove("hidden");
+
+      const lines = block.querySelectorAll(".hidden-line");
+
+      lines.forEach((line, j) => {
+        setTimeout(() => {
+          line.classList.add("show");
+        }, j * 40);
+      });
+
+    }, i * 600);
+  });
+}
+
+type();
+</script>
 
 <style>
 .terminal {
@@ -101,82 +145,90 @@ scan complete — no errors detected ✔
   color: #c8fff3;
 }
 
+/* typing cursor */
+.cursor {
+  display: inline-block;
+  animation: blink 0.8s infinite;
+  color: var(--accent);
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
 .terminal-header {
+  font-size: 0.78rem;
   color: var(--muted);
-  font-size: 0.8rem;
-  margin-bottom: 1.5rem;
-  line-height: 1.4;
+  min-height: 60px;
+  white-space: pre-line;
 }
 
 .title {
-  font-size: 1rem;
-  margin-bottom: 1.2rem;
   color: var(--accent);
-  letter-spacing: 0.08em;
+  font-size: 1rem;
+  margin: 1rem 0;
 }
 
 .terminal-box {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
   border: 1px solid rgba(0,255,202,0.25);
+  background: rgba(0,0,0,0.25);
   padding: 1.5rem;
   border-radius: var(--rl);
-  background: rgba(0,0,0,0.25);
   backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+/* blocks */
+.block {
+  margin-bottom: 1.2rem;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.block.hidden {
+  opacity: 0;
+  transform: translateY(10px);
 }
 
 .block-header {
-  font-size: 0.75rem;
   color: var(--accent);
-  margin-bottom: 0.6rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
 }
 
-.block-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
+/* lines */
 .line {
   display: flex;
   gap: 0.6rem;
   font-size: 0.78rem;
   align-items: center;
+
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all 0.25s ease;
 }
 
-.prompt {
-  color: var(--accent);
+.line.show {
+  opacity: 1;
+  transform: translateX(0);
 }
 
-.name {
-  flex: 1;
-  color: #d7fff7;
-}
+.prompt { color: var(--accent); }
+.name { flex: 1; }
+.tier { font-size: 0.65rem; opacity: 0.6; }
 
-.tier {
-  font-size: 0.65rem;
-  opacity: 0.7;
-}
-
-/* TIER STYLING */
+/* tier colors */
 .high .name { color: #d7fff7; }
 .mid .name { color: #a9d6cf; }
 .base .name { color: rgba(255,255,255,0.55); }
 
 .high .tier { color: var(--accent); }
-.mid .tier { color: rgba(0,255,202,0.6); }
-.base .tier { color: rgba(255,255,255,0.35); }
-
-.line:hover {
-  background: rgba(0,255,202,0.06);
-  padding-left: 0.3rem;
-  border-left: 2px solid var(--accent);
-}
+.mid .tier { color: rgba(0,255,202,0.5); }
+.base .tier { color: rgba(255,255,255,0.3); }
 
 .footer {
-  margin-top: 1.5rem;
+  margin-top: 1.2rem;
   color: rgba(0,255,202,0.6);
   font-size: 0.75rem;
 }
