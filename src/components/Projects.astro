@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const featuredProject = projects.find((p) => p.data.public && p.data.url) ?? null;
 ---
 
 <section id="proyectos" class="section section-dark">
@@ -12,8 +13,30 @@ const projects = (await getCollection('projects'))
     <h2 class="sec-title">Proyectos</h2>
     <p class="sec-sub">Proyectos reales en mi GitHub — lo que he construido.</p>
 
+    {featuredProject && (
+      <a
+        class="featured-project fade-up"
+        href={featuredProject.data.url}
+        target="_blank"
+        rel="noopener noreferrer nofollow external"
+        referrerpolicy="no-referrer"
+      >
+        <div class="fp-top">
+          <span class="fp-label">proyecto destacado</span>
+          <span class="proj-arrow" aria-hidden="true">↗</span>
+        </div>
+        <h3 class="fp-title">{featuredProject.data.title}</h3>
+        <p class="fp-desc">{featuredProject.data.desc}</p>
+        <div class="proj-tags">
+          {featuredProject.data.tags.map((t: string) => <span class="tag">{t}</span>)}
+        </div>
+      </a>
+    )}
+
     <div class="projects-grid">
-      {projects.map((p) => (
+      {projects
+        .filter((p) => p.id !== featuredProject?.id)
+        .map((p) => (
         p.data.public && p.data.url ? (
           <a
             class="project-card fade-up"

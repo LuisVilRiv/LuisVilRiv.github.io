@@ -721,6 +721,52 @@ const { title = "Luis Villegas Rivera — Dev & Sistemas" } = Astro.props;
     margin-bottom: 2rem;
   }
 
+  .featured-project {
+    display: block;
+    padding: 1.7rem;
+    margin-bottom: 1.2rem;
+    background: linear-gradient(135deg, rgba(0,255,202,0.08), rgba(0,255,202,0.02));
+    border: 1px solid rgba(0,255,202,0.3);
+    border-radius: var(--rl);
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  }
+
+  .featured-project:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 14px 42px rgba(0,255,202,0.14);
+  }
+
+  .fp-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .fp-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .fp-title {
+    font-family: var(--sans);
+    font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.55rem;
+  }
+
+  .fp-desc {
+    color: var(--muted2);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    max-width: 70ch;
+  }
+
   .project-card {
     display: flex;
     flex-direction: column;

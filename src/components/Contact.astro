@@ -44,6 +44,7 @@
 
       <!-- FORM -->
       <form class="contact-form" id="contactForm" action="https://formspree.io/f/xlgaejzd" method="POST">
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true" />
 
         <div class="field">
           <label for="nombre">Nombre</label>
@@ -88,7 +89,7 @@
           Enviar mensaje
         </button>
 
-        <p id="status" class="form-status"></p>
+        <p id="status" class="form-status" aria-live="polite"></p>
 
       </form>
 
@@ -123,6 +124,13 @@
     } catch {
       return false;
     }
+  }
+
+  function setStatus(message: string, type: "ok" | "error" | "info" = "info") {
+    status!.textContent = message;
+    status!.classList.remove("ok", "error");
+    if (type === "ok") status!.classList.add("ok");
+    if (type === "error") status!.classList.add("error");
   }
 
   if (!form || !btn || !status || !input || !preview || !icon || !wrapper || !clearBtn) {
@@ -174,8 +182,27 @@
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    if (!form.checkValidity()) {
+      setStatus("Revisa los campos obligatorios antes de enviar.", "error");
+      form.reportValidity();
+      return;
+    }
+
+    if (input.value && !isValidURL(input.value.trim())) {
+      setStatus("El enlace opcional no es valido.", "error");
+      input.focus();
+      return;
+    }
+
+    const messageLen = (formDataLikeGet("mensaje") ?? "").trim().length;
+    if (messageLen < 20) {
+      setStatus("El mensaje debe tener al menos 20 caracteres.", "error");
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = "Enviando...";
+    setStatus("Enviando formulario...", "info");
 
     const formData = new FormData(form);
 
@@ -189,17 +216,23 @@
       if (res.ok) {
         window.location.href = "gracias"; // 🔥 CLAVE
       } else {
-        status.textContent = "Error al enviar";
-        status.style.color = "#f87171";
+        setStatus("Error al enviar. Intentalo de nuevo en unos minutos.", "error");
       }
     } catch {
-      status.textContent = "Error de conexión";
-      status.style.color = "#f87171";
+      setStatus("Error de conexion. Revisa internet e intentalo otra vez.", "error");
     }
 
     btn.disabled = false;
     btn.textContent = "Enviar mensaje";
   });
+
+  function formDataLikeGet(key: string): string {
+    const target = form!.elements.namedItem(key);
+    if (!target || !(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement)) {
+      return "";
+    }
+    return target.value;
+  }
 </script>
 
 <style>
@@ -268,5 +301,28 @@
   margin-top: 6px;
   font-size: 11px;
   opacity: 0.5;
+}
+
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.form-status {
+  min-height: 1.2rem;
+  font-size: 0.78rem;
+  color: var(--muted2);
+}
+
+.form-status.ok {
+  color: #4ade80;
+}
+
+.form-status.error {
+  color: #f87171;
 }
 </style>
