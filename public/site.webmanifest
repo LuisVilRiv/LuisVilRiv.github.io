@@ -1,0 +1,16 @@
+{
+  "name": "Luis Villegas Rivera - Portfolio",
+  "short_name": "LuisVR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090f",
+  "theme_color": "#07090f",
+  "lang": "es-ES",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

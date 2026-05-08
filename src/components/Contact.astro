@@ -20,17 +20,17 @@
           <span class="cl-val">villegasriveraluis@gmail.com</span>
         </a>
 
-        <a href="https://wa.me/34635138578" target="_blank" class="contact-link">
+        <a href="https://wa.me/34635138578" target="_blank" rel="noopener noreferrer nofollow external" referrerpolicy="no-referrer" class="contact-link">
           <span class="cl-label">whatsapp</span>
           <span class="cl-val">+34 635 13 85 78</span>
         </a>
 
-        <a href="https://github.com/LuisVilRiv" target="_blank" class="contact-link">
+        <a href="https://github.com/LuisVilRiv" target="_blank" rel="noopener noreferrer nofollow external" referrerpolicy="no-referrer" class="contact-link">
           <span class="cl-label">github</span>
           <span class="cl-val">LuisVilRiv</span>
         </a>
 
-        <a href="https://www.linkedin.com/in/luis-villegas-rivera/" target="_blank" class="contact-link">
+        <a href="https://www.linkedin.com/in/luis-villegas-rivera/" target="_blank" rel="noopener noreferrer nofollow external" referrerpolicy="no-referrer" class="contact-link">
           <span class="cl-label">linkedin</span>
           <span class="cl-val">luis-villegas-rivera</span>
         </a>
@@ -43,26 +43,26 @@
       </div>
 
       <!-- FORM -->
-      <form class="contact-form" id="contactForm">
+      <form class="contact-form" id="contactForm" action="https://formspree.io/f/xlgaejzd" method="POST">
 
         <div class="field">
-          <label>Nombre</label>
-          <input name="nombre" type="text" required />
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" required autocomplete="name" />
         </div>
 
         <div class="field">
-          <label>Email</label>
-          <input name="email" type="email" required />
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email" />
         </div>
 
         <div class="field">
-          <label>Mensaje</label>
-          <textarea name="mensaje" rows="5" required></textarea>
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
         </div>
 
         <!-- LINK INTELIGENTE -->
         <div class="field">
-          <label>Archivo o proyecto (opcional)</label>
+          <label for="linkInput">Archivo o proyecto (opcional)</label>
 
           <div class="link-input-wrapper" id="linkWrapper">
             <span id="linkIcon" class="link-icon">🔗</span>
@@ -74,7 +74,7 @@
               placeholder="https://github.com/... o drive/dropbox"
             />
 
-            <button type="button" id="clearLink" class="clear-link">✕</button>
+            <button type="button" id="clearLink" class="clear-link" aria-label="Limpiar enlace">✕</button>
           </div>
 
           <div id="linkPreview" class="link-preview hidden"></div>
@@ -97,17 +97,17 @@
 </section>
 
 <script>
-  const form = document.getElementById("contactForm");
-  const btn = document.getElementById("submitBtn");
-  const status = document.getElementById("status");
+  const form = document.getElementById("contactForm") as HTMLFormElement | null;
+  const btn = document.getElementById("submitBtn") as HTMLButtonElement | null;
+  const status = document.getElementById("status") as HTMLParagraphElement | null;
 
-  const input = document.getElementById("linkInput");
-  const preview = document.getElementById("linkPreview");
-  const icon = document.getElementById("linkIcon");
-  const wrapper = document.getElementById("linkWrapper");
-  const clearBtn = document.getElementById("clearLink");
+  const input = document.getElementById("linkInput") as HTMLInputElement | null;
+  const preview = document.getElementById("linkPreview") as HTMLDivElement | null;
+  const icon = document.getElementById("linkIcon") as HTMLSpanElement | null;
+  const wrapper = document.getElementById("linkWrapper") as HTMLDivElement | null;
+  const clearBtn = document.getElementById("clearLink") as HTMLButtonElement | null;
 
-  function detectPlatform(url) {
+  function detectPlatform(url: string) {
     if (url.includes("github.com")) return { name: "GitHub", icon: "🐙" };
     if (url.includes("drive.google.com")) return { name: "Google Drive", icon: "📁" };
     if (url.includes("dropbox.com")) return { name: "Dropbox", icon: "🧊" };
@@ -116,13 +116,17 @@
     return { name: "Enlace", icon: "🔗" };
   }
 
-  function isValidURL(str) {
+  function isValidURL(str: string) {
     try {
       new URL(str);
       return true;
     } catch {
       return false;
     }
+  }
+
+  if (!form || !btn || !status || !input || !preview || !icon || !wrapper || !clearBtn) {
+    throw new Error("No se pudo inicializar el formulario de contacto.");
   }
 
   input.addEventListener("input", () => {
@@ -154,7 +158,7 @@
       <span class="lp-icon">${platform.icon}</span>
       <div class="lp-meta">
         <strong>${platform.name}</strong>
-        <a href="${url}" target="_blank">${url}</a>
+        <a href="${url}" target="_blank" rel="noopener noreferrer nofollow external" referrerpolicy="no-referrer">${url}</a>
       </div>
     `;
   });

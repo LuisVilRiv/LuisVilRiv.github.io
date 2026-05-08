@@ -19,7 +19,8 @@ const projects = (await getCollection('projects'))
             class="project-card fade-up"
             href={p.data.url}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow external"
+            referrerpolicy="no-referrer"
           >
             <div class="proj-head">
               <span class="proj-title">{p.data.title}</span>
@@ -46,7 +47,7 @@ const projects = (await getCollection('projects'))
     </div>
 
     <p class="projects-footer">
-      <a href="https://github.com/LuisVilRiv" target="_blank" rel="noopener noreferrer">
+      <a href="https://github.com/LuisVilRiv" target="_blank" rel="noopener noreferrer nofollow external" referrerpolicy="no-referrer">
         Ver perfil completo en GitHub →
       </a>
     </p>

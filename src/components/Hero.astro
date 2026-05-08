@@ -32,7 +32,11 @@
     <span class="photo-corner tr"></span>
     <span class="photo-corner bl"></span>
     <div class="photo-frame">
-      <img src="/foto.jpg" alt="Luis Villegas Rivera" width="280" height="330" />
+      <picture>
+        <source srcset="/foto.avif" type="image/avif" />
+        <source srcset="/foto.webp" type="image/webp" />
+        <img src="/foto.jpg" alt="Luis Villegas Rivera" width="280" height="330" loading="lazy" decoding="async" />
+      </picture>
     </div>
     <div class="photo-badge">
       <span class="label">nota media DAW</span>
